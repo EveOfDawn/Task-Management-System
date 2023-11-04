@@ -15,7 +15,7 @@ class Project(db.Model):
     tasks = db.relationship('Task', backref='projects')
     #users = db.relationship('User')
     def __repr__(self):
-        return f'<Project Id: "{self.id}" Data: {self.data}>'
+        return f'<Project Id: {self.id}" Data: {self.data}>'
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,10 +25,13 @@ class User(db.Model, UserMixin):
     following = db.relationship('Project', secondary=user_project, backref='users')
 
     def __repr__(self):
-        return f'<User Id: "{self.id} username: {self.user_name} Password: {self.password} First Name: {self.first_name}">'
+        return f'<User Id: {self.id} username: {self.user_name} Password: {self.password} First Name: {self.first_name}>'
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    def __repr__(self):
+        return f'<Task Id: {self.id} Data: {self.data} Project Id: {self.project_id}>'

@@ -4,66 +4,82 @@
 <ul class="list-group list-group-flush" id="projects">
   {% for project in user.following %}
   <li class="list-group-item">
-    {{ project.data }}
-    <button type="button" class="close" onClick="deleteProject({{ project.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    
-    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal{{ project.data }}">Add Member</button>
-    <div id="myModal{{ project.data }}" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-    
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Add Members</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-            <p>Enter the username of the member you would like to add to {{ project.data }}:</p>
-            <form method="POST" id="memberForm{{ project.id }}">
-              <input id="member" class="form-control" name="member">
-              <br>
-              <button type="button" class="btn btn-primary" onclick="addMember({{ project.id }})">Add Member</button>
-            </form>
-            
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-    
-      </div>
-    </div>
-
-    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#Modal{{ project.data }}">Edit Project Name</button>
-    <div id="Modal{{ project.data }}" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-    
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Edit Project Name</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-            <p>Edit {{ project.data }}:</p>
-            <form method="POST" id="nameChange{{ project.id }}">
-              <input id="name_change" class="form-control" name="name_change">
-              <br>
-              <button type="button" class="btn btn-primary" onclick="editMember({{ project.id }})">Submit</button>
-            </form>
-            
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-danger" data-dismiss="modal">Close</button>
+    <div>
+      {{ project.data }}
+      <button type="button" class="close" onClick="deleteProject({{ project.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      
+      <div>
+        
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#myModal{{ project.data }}">Add Member</button>
+        <div id="myModal{{ project.data }}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+        
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Add Members</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <p>Enter the username of the member you would like to add to {{ project.data }}:</p>
+                <form method="POST" id="memberForm{{ project.id }}">
+                  <input id="member" class="form-control" name="member">
+                  <br>
+                  <button type="button" class="btn btn-primary" onclick="addMember({{ project.id }})">Add Member</button>
+                </form>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-danger" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+        
           </div>
         </div>
-    
-      </div>
-    </div>
 
-    <button type="button" class="btn btn-info btn-sm" onClick="leaveProject({{ project.id }})">Leave Project</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#Modal{{ project.data }}">Edit Project Name</button>
+        <div id="Modal{{ project.data }}" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+        
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Edit Project Name</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <p>Edit {{ project.data }}:</p>
+                <form method="POST" id="nameChange{{ project.id }}">
+                  <input id="name_change" class="form-control" name="name_change">
+                  <br>
+                  <button type="button" class="btn btn-primary" onclick="editMember({{ project.id }})">Submit</button>
+                </form>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-danger" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+        
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-sm" onClick="leaveProject({{ project.id }})">Leave Project</button>
+        
+          <form method="POST" id="memberForm{{ project.id }}" class="d-inline">
+            <input type="hidden" name="project_id" value="{{ project.id }}">
+            <button type="submit" class="btn btn-secondary btn-sm">Tasks</button>
+          </form>
+        
+
+      </div>
+
+      
+      
+
+    </div>
     
   </li>
   {% endfor %}

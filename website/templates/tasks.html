@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block title %}Tasks{% endblock %} {% block content
+    %}
+    <h1 align="center">Tasks</h1>
+    <ul class="list-group list-group-flush" id="projects">
+      {% for task in project.tasks %}
+      <li class="list-group-item">
+        <div>
+            {{ task.data }}
+            <button type="button" class="close" onClick="deleteTask({{ task.id }})">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div>
+                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#Modal{{ task.data }}">Edit Task Name</button>
+                <div id="Modal{{ task.data }}" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                    
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Edit Task Name</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Edit {{ task.data }}:</p>
+                                <form method="POST" id="nameChange{{ task.id }}">
+                                <input id="name_change" class="form-control" name="name_change">
+                                <br>
+                                <button type="button" class="btn btn-primary" onclick="editTaskMember({{ task.id }})">Submit</button>
+                                </form>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        
+        
+      </li>
+      {% endfor %}
+    </ul>
+    <form method="POST">
+      <input name="task" id="task" class="form-control" placeholder="task name" required>
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Add Task</button>
+      </div>
+    </form>
+    {% endblock %}

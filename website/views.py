@@ -1,9 +1,9 @@
 from __future__ import print_function # In python 2.7
 import sys
 
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Project, User
+from .models import Project, User, Task
 from . import db
 import json
 
@@ -16,8 +16,7 @@ views = Blueprint('views', __name__)
 def home():
     if request.method == 'POST': 
         project = request.form.get('project')#Gets the project from the HTML 
-        #member = request.form.get('member')
-        #print(member, file=sys.stderr)
+        project_id = request.form.get('project_id')
         if project:
             new_project = Project(data=project)#, user_id=current_user.id)  #providing the schema for the project 
             db.session.add(new_project) #adding the project to the database 
@@ -25,16 +24,26 @@ def home():
             current_user.following.append(new_project)
             db.session.commit()
             flash('Project added!', category='success')
-        
-        
-        else:
-            #flash('Username does not exist', category='error')
-            print('Username does not exist', file=sys.stderr)
-        #return jsonify({})
-        
+        elif project_id:
+            return redirect(url_for('views.show_task', project_id=project_id))
 
     return render_template("home.html", user=current_user)
 
+@views.route('/show-tasks', methods=['GET', 'POST'])
+@login_required
+def show_task(): 
+    project_id = request.args['project_id']
+    project = Project.query.get(project_id)
+    if request.method == 'POST': 
+        task = request.form.get('task')
+        if task:
+            new_task = Task(data=task, project_id=project_id)#, user_id=current_user.id)  #providing the schema for the project 
+            db.session.add(new_task) #adding the project to the database 
+            db.session.commit()
+            flash('Task added!', category='success')
+        
+
+    return render_template("tasks.html", user=current_user, project=project)
 
 @views.route('/delete-project', methods=['POST'])
 def delete_project(): 
@@ -44,6 +53,18 @@ def delete_project():
     
     if project:
         db.session.delete(project)
+        db.session.commit()
+
+    return jsonify({})
+
+@views.route('/delete-task', methods=['POST'])
+def delete_task(): 
+    task = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
+    taskId = task['taskId']
+    task = Task.query.get(taskId)
+    
+    if task:
+        db.session.delete(task)
         db.session.commit()
 
     return jsonify({})
@@ -89,5 +110,20 @@ def edit_member():
     if name_change and project and (name_change != ''):
         project.data = name_change
         db.session.add(project)
+        db.session.commit()
+    return jsonify({})
+
+@views.route('/edit-task-member', methods=['POST'])
+def edit_task_member():
+    task = json.loads(request.data) # this function expects a JSON from the INDEX.js file 
+    taskId = task['taskId']
+    change = task['change']
+    name_change = change['name_change']
+    task = Task.query.get(taskId)
+    print(taskId, file=sys.stderr)
+    print(name_change, file=sys.stderr)
+    if name_change and task and (name_change != ''):
+        task.data = name_change
+        db.session.add(task)
         db.session.commit()
     return jsonify({})

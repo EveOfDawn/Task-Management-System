@@ -31,6 +31,7 @@
         <div class="navbar-nav">
           {% if user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="projects" href="/">Projects</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
@@ -86,6 +87,15 @@
         });
       }
 
+      function deleteTask(taskId) {
+        fetch("/delete-task", {
+          method: "POST",
+          body: JSON.stringify({ taskId: taskId }),
+        }).then((_res) => {
+          window.location.href = "/show-tasks?project_id="+taskId;
+        });
+      }
+
       function addMember(projectId) {
         let form = document.getElementById('memberForm'+projectId)
         let formData = new FormData(form)
@@ -120,6 +130,25 @@
         console.log("addMember success?")
       }
 
+      function editTaskMember(taskId) {
+        let form = document.getElementById('nameChange'+taskId)
+        let formData = new FormData(form)
+        let data = Object.fromEntries(formData)
+        let jsonId = JSON.stringify(taskId)
+        let jsonData = JSON.stringify(data)
+        console.log(jsonId)
+        console.log(jsonData)
+        console.log('taskid: ', taskId)
+        fetch("/edit-task-member", {
+          method: "POST",
+          body: JSON.stringify({ taskId: taskId, change: data }),
+        }).then((_res) => {
+          window.location.href = "/show-tasks?project_id="+taskId;
+        });
+        console.log("addMember success?")
+        console.log('taskid: ', taskId)
+      }
+
       function leaveProject(projectId) {
         console.log(projectId)
         fetch("/leave-project", {
@@ -129,6 +158,16 @@
           window.location.href = "/";
         });
       }
+/*
+      function showTask(projectId) {
+        fetch("/show-tasks", {
+          method: "POST",
+          body: JSON.stringify({ projectId: projectId }),
+        }).then((_res) => {
+          window.location.href = "/";
+        });
+      }
+*/
 </script>
 {% endblock %}
   </body>
