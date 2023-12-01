@@ -56,6 +56,7 @@ def test_login_fails(client, username, password):
     assert response.request.path == "/login"
     #assert b'Logged in successfully!' in response.data
     logout(client)
+
 ''' 
 #works, but needs a new username each time it is run
 def test_signup(client):
@@ -64,9 +65,9 @@ def test_signup(client):
     assert response.request.path == "/"
 '''
 #black box input coverage partitioning technique
-# ('') does not pass
+# ('') does not pass, moved to test_create_project_fail
 @pytest.mark.parametrize(('name'), (
-        ('t'), ('T'), (''), ('1'), ('='), (' ')
+        ('t'), ('T'), ('1'), ('='), (' ') #('')
 ))
 def test_create_project(client, name):
     login(client, 'utest','ptest')
@@ -75,6 +76,18 @@ def test_create_project(client, name):
     assert response.status_code == 200
     assert response.request.path == "/"
     assert b'Project added!' in response.data
+
+
+@pytest.mark.parametrize(('name'), (
+        (''), ("")
+))
+def test_create_project_fail(client, name):
+    login(client, 'utest','ptest')
+
+    response = project_create(client, name)
+    assert response.status_code == 200
+    assert response.request.path == "/"
+    assert not (b'Project added!' in response.data)
 
 
 def project_create(client, name):
